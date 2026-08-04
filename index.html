@@ -1,1 +1,196 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>صدقة جارية</title><link rel="manifest" href="manifest.json"><meta name="theme-color" content="#1b4332"><meta name="description" content="تطبيق صدقة جارية للأذكار والتسبيح"><style>:root{--bg-color:#f4f7f6;--card-bg:#ffffff;--primary-color:#1b4332;--accent-color:#2d6a4f;--text-color:#2b2b2b;--subtext-color:#666666;--shadow:0 4px 15px rgba(0,0,0,0.05);--radius:16px;}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background-color:var(--bg-color);color:var(--text-color);margin:0;padding:20px;display:flex;justify-content:center;align-items:center;min-height:100vh;box-sizing:border-box;}.container{width:100%;max-width:480px;background:var(--card-bg);border-radius:var(--radius);box-shadow:var(--shadow);padding:30px 24px;text-align:center;}header h1{color:var(--primary-color);margin-top:0;margin-bottom:8px;font-size:1.8rem;}header p{color:var(--subtext-color);margin-bottom:24px;font-size:0.95rem;}.dhikr-card{background:#e8f5e9;border-right:5px solid var(--accent-color);padding:20px;border-radius:12px;margin-bottom:24px;min-height:90px;display:flex;align-items:center;justify-content:center;font-size:1.25rem;line-height:1.6;color:var(--primary-color);font-weight:600;}.counter-section{margin-bottom:24px;}.counter-display{font-size:3rem;font-weight:bold;color:var(--accent-color);margin-bottom:12px;}.btn{background-color:var(--primary-color);color:#ffffff;border:none;padding:14px 28px;font-size:1.1rem;border-radius:30px;cursor:pointer;transition:background 0.2s,transform 0.1s;box-shadow:0 4px 10px rgba(27,67,50,0.2);width:80%;}.btn:active{transform:scale(0.97);background-color:var(--accent-color);}.actions{display:flex;justify-content:space-around;margin-top:20px;}.btn-secondary{background:transparent;border:1px solid var(--subtext-color);color:var(--subtext-color);padding:8px 16px;border-radius:20px;font-size:0.85rem;cursor:pointer;}footer{margin-top:30px;font-size:0.8rem;color:var(--subtext-color);border-top:1px solid #eee;padding-top:15px;}</style></head><body><div class="container"><header><h1>صدقة جارية</h1><p>سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى</p></header><main><div class="dhikr-card" id="dhikrText">سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ</div><div class="counter-section"><div class="counter-display" id="counter">0</div><button class="btn" id="countBtn" onclick="incrementCounter()">تسبيح</button></div><div class="actions"><button class="btn-secondary" onclick="nextDhikr()">الذكر التالي</button><button class="btn-secondary" onclick="resetCounter()">إعادة ضبط</button></div></main><footer><p>تطبيق صدقة جارية - يعمل بدون اتصال بالإنترنت</p></footer></div><script>const adhkar=["سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ","أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ","لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ","اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ","لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ"];let currentIndex=0;let count=parseInt(localStorage.getItem('dhikrCount'))||0;document.getElementById('counter').innerText=count;function incrementCounter(){count++;document.getElementById('counter').innerText=count;localStorage.setItem('dhikrCount',count);}function resetCounter(){count=0;document.getElementById('counter').innerText=count;localStorage.setItem('dhikrCount',count);}function nextDhikr(){currentIndex=(currentIndex+1)%adhkar.length;document.getElementById('dhikrText').innerText=adhkar[currentIndex];resetCounter();}if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('./service-worker.js').then(reg=>console.log('Service Worker Registered')).catch(err=>console.log('Service Worker Failed',err));});}</script></body></html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صدقة جارية</title>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1b4332">
+    <meta name="description" content="تطبيق صدقة جارية للأذكار والتسبيح">
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --primary-color: #1b4332;
+            --accent-color: #2d6a4f;
+            --text-color: #2b2b2b;
+            --subtext-color: #666666;
+            --shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --radius: 16px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            background: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 30px 24px;
+            text-align: center;
+        }
+
+        header h1 {
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: var(--subtext-color);
+            margin-bottom: 24px;
+            font-size: 0.95rem;
+        }
+
+        .dhikr-card {
+            background: #e8f5e9;
+            border-right: 5px solid var(--accent-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            min-height: 90px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .counter-section {
+            margin-bottom: 24px;
+        }
+
+        .counter-display {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--accent-color);
+            margin-bottom: 12px;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: #ffffff;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(27, 67, 50, 0.2);
+            width: 80%;
+        }
+
+        .btn:active {
+            transform: scale(0.97);
+            background-color: var(--accent-color);
+        }
+
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid var(--subtext-color);
+            color: var(--subtext-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            cursor: pointer;
+        }
+
+        footer {
+            margin-top: 30px;
+            font-size: 0.8rem;
+            color: var(--subtext-color);
+            border-top: 1px solid #eee;
+            padding-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>صدقة جارية</h1>
+            <p>سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى</p>
+        </header>
+
+        <main>
+            <div class="dhikr-card" id="dhikrText">
+                سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ
+            </div>
+
+            <div class="counter-section">
+                <div class="counter-display" id="counter">0</div>
+                <button class="btn" id="countBtn" onclick="incrementCounter()">تسبيح</button>
+            </div>
+
+            <div class="actions">
+                <button class="btn-secondary" onclick="nextDhikr()">الذكر التالي</button>
+                <button class="btn-secondary" onclick="resetCounter()">إعادة ضبط</button>
+            </div>
+        </main>
+
+        <footer>
+            <p>تطبيق صدقة جارية - يعمل بدون اتصال بالإنترنت</p>
+        </footer>
+    </div>
+
+    <script>
+        const adhkar = [
+            "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ",
+            "أَسْتَغْفِرُ اللَّهَ الْعَظِيمَ وَأَتُوبُ إِلَيْهِ",
+            "لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ",
+            "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ",
+            "لَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ الْعَلِيِّ الْعَظِيمِ"
+        ];
+
+        let currentIndex = 0;
+        let count = parseInt(localStorage.getItem('dhikrCount')) || 0;
+        document.getElementById('counter').innerText = count;
+
+        function incrementCounter() {
+            count++;
+            document.getElementById('counter').innerText = count;
+            localStorage.setItem('dhikrCount', count);
+        }
+
+        function resetCounter() {
+            count = 0;
+            document.getElementById('counter').innerText = count;
+            localStorage.setItem('dhikrCount', count);
+        }
+
+        function nextDhikr() {
+            currentIndex = (currentIndex + 1) % adhkar.length;
+            document.getElementById('dhikrText').innerText = adhkar[currentIndex];
+        }
+
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('Service Worker Registered'))
+                    .catch(err => console.log('Service Worker Failed', err));
+            });
+        }
+    </script>
+</body>
+</html>
