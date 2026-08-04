@@ -39,6 +39,42 @@
     });
 }
 
-document.addEventListener('DOMContentLoaded', updateVisitorCount);
+document.addEventListener('DOMContentLoaded', updateVisitorCount); <style>
+  .visitor-counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: rgba(0, 0, 0, 0.1);
+    padding: 4px 12px;
+    border-radius: 15px;
+    font-size: 13px;
+    color: #333;
+    font-weight: bold;
+    margin: 10px;
+  }
+  #visits-count {
+    color: #007bff;
+  }
+</style>
+
+<script>
+  function updateVisitorCount() {
+    const namespace = 'sadaqa-jariya-naserkder123';
+    const key = 'visits';
+
+    fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById('visits-count').innerText = data.value.toLocaleString('ar-EG');
+      })
+      .catch(error => {
+        console.error('خطأ في جلب عداد الزوار:', error);
+        document.getElementById('visits-count').innerText = '1';
+      });
+  }
+
+  document.addEventListener('DOMContentLoaded', updateVisitorCount);
+</script>
+
 
 
