@@ -1,80 +1,208 @@
-<div class="visitor-counter">
-  <i class="fas fa-eye"></i>
-  <span>عدد الزوار: </span>
-  <span id="visits-count">...</span>
-</div>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صدقة جارية</title>
+    <!-- تضمين مكتبة الأيقونات لتظهر أيقونة العداد بشكل صحيح -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* تنسيقات الموقع العامة */
+        body {
+            font-family: 'Cairo', Tahoma, sans-serif;
+            background-color: #f7f9f6;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
 
-<div class="visitor-counter">
-  <i class="fas fa-eye"></i>
-  <span>عدد الزوار: </span>
-  <span id="visits-count">...</span>
-</div> <style>
-  .visitor-counter {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-size: 13px;
-    color: #333;
-    font-weight: bold;
-    margin: 10px;
-  }
-  #visits-count {
-    color: #007bff;
-  }
-</style> function updateVisitorCount() {
-  const namespace = 'sadaqa-jariya-naserkder123';
-  const key = 'visits';
+        /* تنسيق عداد الزوار العلوي */
+        .top-bar {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            left: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-  fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-    .then(response => response.json())
-    .then(data => {
-      document.getElementById('visits-count').innerText = data.value.toLocaleString('ar-EG');
-    })
-    .catch(error => {
-      console.error('خطأ في جلب عداد الزوار:', error);
-      document.getElementById('visits-count').innerText = '1';
-    });
-}
+        .visitor-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background-color: rgba(0, 0, 0, 0.05);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #333;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
 
-document.addEventListener('DOMContentLoaded', updateVisitorCount); <style>
-  .visitor-counter {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background-color: rgba(0, 0, 0, 0.1);
-    padding: 4px 12px;
-    border-radius: 15px;
-    font-size: 13px;
-    color: #333;
-    font-weight: bold;
-    margin: 10px;
-  }
-  #visits-count {
-    color: #007bff;
-  }
-</style>
+        #visits-count {
+            color: #1b4332;
+        }
 
-<script>
-  function updateVisitorCount() {
-    const namespace = 'sadaqa-jariya-naserkder123';
-    const key = 'visits';
+        /* تصميم البطاقة الرئيسية للتطبيق */
+        .main-card {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            margin-top: 50px;
+        }
 
-    fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
-      .then(response => response.json())
-      .then(data => {
-        document.getElementById('visits-count').innerText = data.value.toLocaleString('ar-EG');
-      })
-      .catch(error => {
-        console.error('خطأ في جلب عداد الزوار:', error);
-        document.getElementById('visits-count').innerText = '1';
-      });
-  }
+        h1 {
+            color: #1b4332;
+            margin-bottom: 5px;
+        }
 
-  document.addEventListener('DOMContentLoaded', updateVisitorCount);
-</script>
+        .subtitle {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
 
+        .dhikr-box {
+            background-color: #e8f5e9;
+            padding: 20px;
+            border-radius: 12px;
+            color: #1b4332;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border: 1px solid #c8e6c9;
+        }
 
+        .counter-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #1b4332;
+            margin: 15px 0;
+        }
 
+        .btn {
+            background-color: #1b4332;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(27, 67, 50, 0.2);
+            transition: 0.2s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .secondary-btns {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid #ccc;
+            color: #666;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            flex: 1;
+        }
+
+        .footer-text {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- شريط علوي يحتوي على عداد الزوار -->
+    <div class="top-bar">
+        <div></div> <!-- فراغ للموازنة -->
+        <div class="visitor-counter">
+            <i class="fas fa-eye" style="color: #1b4332;"></i>
+            <span>عدد الزوار: </span>
+            <span id="visits-count">...</span>
+        </div>
+    </div>
+
+    <!-- محتوى التطبيق الرئيسي -->
+    <div class="main-card">
+        <h1>صدقة جارية</h1>
+        <div class="subtitle">سَبِّحِ اسْمَ رَبِّكَ الْأَعْلَى</div>
+
+        <div class="dhikr-box">
+            سُبْحَانَ اللَّهِ وَبِحَمْدِهِ ، سُبْحَانَ اللَّهِ الْعَظِيمِ
+        </div>
+
+        <div class="counter-number" id="counter">0</div>
+
+        <button class="btn" onclick="incrementCounter()">تسبيح</button>
+
+        <div class="secondary-btns">
+            <button class="btn-secondary" onclick="nextDhikr()">الذكر التالي</button>
+            <button class="btn-secondary" onclick="resetCounter()">إعادة ضبط</button>
+        </div>
+
+        <div class="footer-text">
+            تطبيق صدقة جارية - يعمل بدون اتصال بالإنترنت
+        </div>
+    </div>
+
+    <!-- كود البرمجة ووظيفة العداد -->
+    <script>
+        // منطق العداد البسيط للتسبيح
+        let count = 0;
+        function incrementCounter() {
+            count++;
+            document.getElementById('counter').innerText = count;
+        }
+
+        function resetCounter() {
+            count = 0;
+            document.getElementById('counter').innerText = count;
+        }
+
+        function nextDhikr() {
+            resetCounter();
+            // يمكنك إضافة تنقل بين الأذكار هنا مستقبلاً
+        }
+
+        // دالة جلب وتحديث عداد الزوار التلقائي
+        function updateVisitorCount() {
+            const namespace = 'sadaqa-jariya-naserkder123';
+            const key = 'visits';
+
+            fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('visits-count').innerText = data.value.toLocaleString('ar-EG');
+                })
+                .catch(error => {
+                    console.error('خطأ في جلب عداد الزوار:', error);
+                    document.getElementById('visits-count').innerText = '1';
+                });
+        }
+
+        // تشغيل العداد عند تحميل الصفحة
+        document.addEventListener('DOMContentLoaded', updateVisitorCount);
+    </script>
+</body>
+</html>
