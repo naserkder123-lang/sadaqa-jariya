@@ -18,5 +18,21 @@
   #visits-count {
     color: #007bff;
   }
-</style>
+</style> function updateVisitorCount() {
+  const namespace = 'sadaqa-jariya-naserkder123';
+  const key = 'visits';
+
+  fetch(`https://api.countapi.xyz/hit/${namespace}/${key}`)
+    .then(response => response.json())
+    .then(data => {
+      document.getElementById('visits-count').innerText = data.value.toLocaleString('ar-EG');
+    })
+    .catch(error => {
+      console.error('خطأ في جلب عداد الزوار:', error);
+      document.getElementById('visits-count').innerText = '1';
+    });
+}
+
+document.addEventListener('DOMContentLoaded', updateVisitorCount);
+
 
