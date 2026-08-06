@@ -966,4 +966,177 @@
     {text:"«الدين النصيحة» قيل: لمن يا رسول الله؟ قال: «لله ولكتابه ولرسوله ولأئمة المسلمين وعامتهم»", src:"رواه مسلم"},
     {text:"«من لا يرحم لا يُرحم»", src:"متفق عليه"},
     {text:"«اتق الله حيثما كنت، وأتبع السيئة الحسنة تمحها، وخالق الناس بخلق حسن»", src:"رواه الترمذي"},
-    {text:"«خيركم من تعلّم القرآن
+    {text:"«خيركم من تعلّم القرآن وعلّمه»", src:"رواه البخاري"},
+    {text:"«الطهور شطر الإيمان»", src:"رواه مسلم"},
+    {text:"«من صام رمضان إيمانًا واحتسابًا غُفر له ما تقدّم من ذنبه»", src:"متفق عليه"},
+    {text:"«المسلم من سلم المسلمون من لسانه ويده»", src:"متفق عليه"},
+    {text:"«الكلمة الطيبة صدقة»", src:"متفق عليه"}
+  ];
+  let hadithIdx = new Date().getDate() % hadiths.length;
+  function renderHadith(){
+    const h = hadiths[hadithIdx];
+    document.getElementById('hadithText').textContent = h.text;
+    document.getElementById('hadithSource').textContent = h.src;
+  }
+  document.getElementById('nextHadith').addEventListener('click', ()=>{
+    hadithIdx = (hadithIdx+1) % hadiths.length;
+    renderHadith();
+  });
+  renderHadith();
+
+  document.getElementById('shareHadith').addEventListener('click', ()=>{
+    const h = hadiths[hadithIdx];
+    const msg = `${h.text}\n${h.src}\n\n☪️ من تطبيق صدقة جارية`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  });
+
+  // ---------- ألهمني (Inspire Me) ----------
+  const duas = [
+    {text:"اللهم اغفر لوالديّ وارحمهما كما ربياني صغيرًا", kind:"دعاء"},
+    {text:"ربِّ اجعلني مقيم الصلاة ومن ذريتي، ربنا وتقبل دعاء", kind:"دعاء"},
+    {text:"اللهم أعنّي على ذكرك وشكرك وحسن عبادتك", kind:"دعاء"},
+    {text:"ربنا آتنا في الدنيا حسنة وفي الآخرة حسنة وقنا عذاب النار", kind:"دعاء"}
+  ];
+  const dhikrList = [
+    {text:"سبحان الله وبحمده، سبحان الله العظيم", kind:"ذكر"},
+    {text:"لا إله إلا الله وحده لا شريك له", kind:"ذكر"},
+    {text:"أستغفر الله العظيم وأتوب إليه", kind:"ذكر"},
+    {text:"لا حول ولا قوة إلا بالله", kind:"ذكر"}
+  ];
+  const hikam = [
+    {text:"بر الوالدين باب من أبواب الجنة، فحافظ عليه ما استطعت", kind:"حكمة"},
+    {text:"الصدقة الجارية لا ينقطع أجرها ولو بعد سنين طويلة", kind:"حكمة"},
+    {text:"من دعا لوالديه في كل صلاة، جدد لهما رحمة لا تنقطع", kind:"حكمة"}
+  ];
+  let lastInspire = null;
+
+  function inspirePool(){
+    const pool = [];
+    verses.forEach(v => pool.push({text:v.text, kind:"آية"}));
+    hadiths.forEach(h => pool.push({text:h.text.replace(/[«»]/g,''), kind:"حديث"}));
+    duas.forEach(d => pool.push(d));
+    dhikrList.forEach(d => pool.push(d));
+    hikam.forEach(h => pool.push(h));
+    return pool;
+  }
+
+  document.getElementById('inspireBtn').addEventListener('click', ()=>{
+    const box = document.getElementById('inspireBox');
+    box.classList.add('dim');
+    setTimeout(()=>{
+      const pool = inspirePool();
+      let pick;
+      do{ pick = pool[Math.floor(Math.random()*pool.length)]; }while(pool.length>1 && lastInspire && pick.text===lastInspire.text);
+      lastInspire = pick;
+      box.innerHTML = pick.text + '<span class="inspire-kind">' + pick.kind + '</span>';
+      box.classList.remove('dim');
+    }, 180);
+  });
+
+  document.getElementById('copyInspire').addEventListener('click', ()=>{
+    if(!lastInspire) return;
+    navigator.clipboard?.writeText(lastInspire.text).catch(()=>{});
+  });
+
+  document.getElementById('shareInspire').addEventListener('click', ()=>{
+    if(!lastInspire) return;
+    const msg = `${lastInspire.text}\n\n📿 من تطبيق صدقة جارية`;
+    window.open('https://wa.me/?text=' + encodeURIComponent(msg), '_blank');
+  });
+
+  // ---------- تخصيص القراءة (Font customization) ----------
+  async function loadFontPref(){
+    const v = await storageGet('reader-font-pref');
+    let size = 22, font = "'Amiri',serif";
+    if(v){
+      try{ const p = JSON.parse(v); size = p.size||22; font = p.font||font; }catch(e){}
+    }
+    applyFontPref(size, font);
+    document.getElementById('fontSizeRange').value = size;
+    document.querySelectorAll('.font-pick span').forEach(s=>{
+      s.classList.toggle('active', s.dataset.font===font);
+    });
+  }
+  function applyFontPref(size, font){
+    document.documentElement.style.setProperty('--reader-size', size+'px');
+    document.documentElement.style.setProperty('--reader-font', font);
+  }
+  async function saveFontPref(){
+    const size = document.getElementById('fontSizeRange').value;
+    const font = document.querySelector('.font-pick span.active').dataset.font;
+    applyFontPref(size, font);
+    await storageSet('reader-font-pref', JSON.stringify({size,font}));
+  }
+  document.getElementById('fontSizeRange').addEventListener('input', saveFontPref);
+  document.querySelectorAll('.font-pick span').forEach(s=>{
+    s.addEventListener('click', ()=>{
+      document.querySelectorAll('.font-pick span').forEach(x=>x.classList.remove('active'));
+      s.classList.add('active');
+      saveFontPref();
+    });
+  });
+
+  // ---------- App-wide font size ----------
+  let appScale = 1;
+  function applyAppScale(){
+    document.body.style.zoom = appScale;
+    document.getElementById('appSizeLabel').textContent = Math.round(appScale*100) + '%';
+  }
+  async function saveAppScale(){
+    await storageSet('app-font-scale', String(appScale));
+    applyAppScale();
+  }
+  async function loadAppScale(){
+    const v = await storageGet('app-font-scale');
+    if(v){ const n = parseFloat(v); if(n>=0.8 && n<=1.6) appScale = n; }
+    applyAppScale();
+  }
+  document.getElementById('appSizeUp').addEventListener('click', ()=>{
+    appScale = Math.min(1.6, Math.round((appScale+0.1)*10)/10);
+    saveAppScale();
+  });
+  document.getElementById('appSizeDown').addEventListener('click', ()=>{
+    appScale = Math.max(0.8, Math.round((appScale-0.1)*10)/10);
+    saveAppScale();
+  });
+
+  // ---------- Qibla Direction ----------
+  const KAABA_LAT = 21.4225, KAABA_LNG = 39.8262;
+  document.getElementById('qiblaBtn').addEventListener('click', ()=>{
+    const statusEl = document.getElementById('qiblaStatus');
+    if(!navigator.geolocation){
+      statusEl.textContent = 'المتصفح لا يدعم تحديد الموقع، سيتم فتح الخريطة بدون تحديد نقطة بدايتك.';
+      window.open(`https://www.google.com/maps/dir/?api=1&destination=${KAABA_LAT},${KAABA_LNG}`, '_blank');
+      return;
+    }
+    statusEl.textContent = 'جارٍ تحديد موقعك...';
+    navigator.geolocation.getCurrentPosition(
+      (pos)=>{
+        const { latitude, longitude } = pos.coords;
+        statusEl.textContent = 'تم تحديد موقعك، جارٍ فتح الخريطة...';
+        window.open(`https://www.google.com/maps/dir/?api=1&origin=${latitude},${longitude}&destination=${KAABA_LAT},${KAABA_LNG}`, '_blank');
+      },
+      ()=>{
+        statusEl.textContent = 'تعذّر الوصول لموقعك، سيتم فتح الخريطة بدون تحديد نقطة بدايتك.';
+        window.open(`https://www.google.com/maps/dir/?api=1&destination=${KAABA_LAT},${KAABA_LNG}`, '_blank');
+      }
+    );
+  });
+
+  // ---------- init ----------
+  loadKhatma();
+  loadTasbeeh();
+  loadPages();
+  loadFontPref();
+  loadAppScale();
+
+  // ---------- PWA service worker ----------
+  if('serviceWorker' in navigator){
+    window.addEventListener('load', ()=>{
+      navigator.serviceWorker.register('service-worker.js').catch(()=>{});
+    });
+  }
+})();
+</script>
+</body>
+</html>
