@@ -1,15 +1,26 @@
 {
   "name": "صدقة جارية",
-  "short_name": "صدقة",
-  "start_url": "/index.html",
+  "short_name": "صدقة جارية",
+  "description": "ختمة قرآن، تفسير، أحاديث، مسبحة إلكترونية",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#4CAF50",
+  "background_color": "#0D1F17",
+  "theme_color": "#0F3D2E",
+  "orientation": "portrait",
+  "dir": "rtl",
+  "lang": "ar",
   "icons": [
     {
-      "src": "con-192.png",
+      "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
     }
   ]
 }
